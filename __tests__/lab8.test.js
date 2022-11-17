@@ -25,9 +25,9 @@ describe('Basic user flow for Website', () => {
     for (let i = 0; i < prodItems.length; i++) {
       let data, plainValue;
       // Query select all of the <product-item> elements
-      console.log(`Checking product item ${i}/${prodItems.length}`);
+      // console.log(`Checking product item ${i}/${prodItems.length}`);
       // Grab the .data property of <product-items> to grab all of the json data stored inside
-      data = await prodItems[1].getProperty('data');
+      data = await prodItems[i].getProperty('data');
       // Convert that property to JSON
       plainValue = await data.jsonValue();
       // Make sure the title, price, and image are populated in the JSON
