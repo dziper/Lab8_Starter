@@ -72,15 +72,40 @@ describe('Basic user flow for Website', () => {
   it('Checking number of items in cart on screen', async () => {
     console.log('Checking number of items in cart on screen...');
     // TODO - Step 3
-    // Query select all of the <product-item> elements, then for every single product element
-    // get the shadowRoot and query select the button inside, and click on it.
-    // Check to see if the innerText of #cart-count is 20
+    const prodItems = await page.$$('product-item');
+    for (let i = 1; i < prodItems.length; i++) {
+      const root = await prodItems[i].getProperty('shadowRoot');
+      const button = await root.$('button');
+      await button.click();
+    }
+    const count = await page.$('#cart-count');
+    const text = await count.getProperty('innerText');
+    const json = await text.jsonValue();
+    expect(json).toBe('20');
   }, 10000);
 
   // Check to make sure that after you reload the page it remembers all of the items in your cart
   it('Checking number of items in cart on screen after reload', async () => {
     console.log('Checking number of items in cart on screen after reload...');
     // TODO - Step 4
+    await page.reload();
+
+    const prodItems = await page.$$('product-item');
+    const remove = true;
+    for (let i = 0; i < prodItems.length; i++) {
+      const root = await prodItems[i].getProperty('shadowRoot');
+      const button = await root.$('button');
+      // await button.click();
+      const innerText = await button.getProperty('innerText');
+      const json = await innerText.jsonValue();
+      if (json != "Remove from Cart") {
+        remove = false;
+      }
+    }
+    // const count = await page.$('#cart-count');
+    // const text = await count.getProperty('innerText');
+    // const json = await text.jsonValue();
+    expect(remove).toBe(true);
     // Reload the page, then select all of the <product-item> elements, and check every
     // element to make sure that all of their buttons say "Remove from Cart".
     // Also check to make sure that #cart-count is still 20
