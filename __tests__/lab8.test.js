@@ -52,12 +52,15 @@ describe('Basic user flow for Website', () => {
     // TODO - Step 2
     // Query a <product-item> element using puppeteer ( checkout page.$() and page.$$() in the docs )
     const prodItems = await page.$$('product-item');
-    const root = prodItems.shadowRoot;
-    const button = root.querySelector('button');
+    const root = await prodItems[0].getProperty('shadowRoot');
+    const button = await root.$('button');
+
     // Grab the shadowRoot of that element (it's a property), then query a button from that shadowRoot.
-    page.click(button);
+    await button.click();
     // Once you have the button, you can click it and check the innerText property of the button.
-    const innerText = button.innerText;
+    const innerText = await button.getProperty('innerText');
+    console.log(innerText);
+
     const json = await innerText.jsonValue();
     console.log(json);
     // Once you have the innerText property, use innerText.jsonValue() to get the text value of it
