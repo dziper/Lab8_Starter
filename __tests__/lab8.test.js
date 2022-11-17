@@ -25,7 +25,7 @@ describe('Basic user flow for Website', () => {
     for (let i = 0; i < prodItems.length; i++) {
       let data, plainValue;
       // Query select all of the <product-item> elements
-      console.log(`Checking product item 1/${prodItems.length}`);
+      console.log(`Checking product item ${i}/${prodItems.length}`);
       // Grab the .data property of <product-items> to grab all of the json data stored inside
       data = await prodItems[1].getProperty('data');
       // Convert that property to JSON
@@ -51,9 +51,17 @@ describe('Basic user flow for Website', () => {
     console.log('Checking the "Add to Cart" button...');
     // TODO - Step 2
     // Query a <product-item> element using puppeteer ( checkout page.$() and page.$$() in the docs )
+    const prodItems = await page.$$('product-item');
+    const root = prodItems.shadowRoot;
+    const button = root.querySelector('button');
     // Grab the shadowRoot of that element (it's a property), then query a button from that shadowRoot.
+    page.click(button);
     // Once you have the button, you can click it and check the innerText property of the button.
+    const innerText = button.innerText;
+    const json = await innerText.jsonValue();
+    console.log(json);
     // Once you have the innerText property, use innerText.jsonValue() to get the text value of it
+    expect(json).toBe("Remove from Cart");
   }, 2500);
 
   // Check to make sure that after clicking "Add to Cart" on every <product-item> that the Cart
